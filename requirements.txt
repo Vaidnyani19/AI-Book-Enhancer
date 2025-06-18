@@ -1,4 +1,4 @@
 Flask
 google-generativeai
 
-echo "Flask==2.3.3\ngoogle-generativeai==0.3.2" > requirements.txt
+
