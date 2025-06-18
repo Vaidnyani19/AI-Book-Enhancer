@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>✨ AI Book Enhancer ✨</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background">
+        <div class="container">
+            <h1 class="title">✨ AI Book Enhancer ✨</h1>
+
+            <form method="POST">
+                <textarea name="chapter_text" rows="10" placeholder="Paste your chapter text here..."></textarea>
+                <button type="submit">✨ Enhance Chapter</button>
+            </form>
+
+            {% if result %}
+                <div class="btn-row">
+                    <a class="download-btn" href="{{ url_for('download_pdf') }}?type=reviewed&content={{ result.reviewed | urlencode }}">📅 Download Review PDF</a>
+                    <a class="download-btn" href="{{ url_for('download_pdf') }}?type=enhanced&content={{ result.spun | urlencode }}">🎨 Download Enhanced PDF</a>
+                </div>
+
+                <div class="result-block">
+                    <h2>📝 Review</h2>
+                    <div class="text-box">
+                        <p class="wrapped-text">{{ result.reviewed }}</p>
+                    </div>
+                </div>
+
+                <div class="result-block">
+                    <h2>🎨 Enhanced Version</h2>
+                    <div class="text-box">
+                        <p class="wrapped-text">{{ result.spun }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

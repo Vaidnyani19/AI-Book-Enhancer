@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: ai-book-enhancer
+    env: python
+    buildCommand: ""
+    startCommand: python app.py
+    plan: free
