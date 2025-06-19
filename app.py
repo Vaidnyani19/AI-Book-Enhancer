@@ -6,6 +6,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 import io
+import os  # ✅ required for reading PORT from environment
 
 app = Flask(__name__)
 
@@ -23,6 +24,15 @@ def index():
 def download_pdf():
     content = request.args.get('content', '')
     output_type = request.args.get('type', 'output')
+
+    # 🔍 Debug statements
+    print("📥 PDF download route hit")
+    print(f"Requested type: {output_type}")
+    print(f"Content length: {len(content)}")
+
+    if not content.strip():
+        print("⚠️ No content provided!")
+        return "No content to generate PDF.", 400
 
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(
@@ -64,4 +74,4 @@ def download_pdf():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
-    app.run(debug=False, host='0.0.0.0', port=10000)
+    app.run(debug=False, host='0.0.0.0', port=port)
