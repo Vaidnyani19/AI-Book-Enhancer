@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template, send_file
 from src.ai_writer import spin_chapter
 from src.ai_reviewer import review_chapter
-from src.chroma_helper import save_version_to_chroma, query_similar_versions
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.pagesizes import A4
@@ -68,12 +67,6 @@ def download_pdf():
         download_name=f"{output_type}_chapter.pdf",
         mimetype='application/pdf'
     )
-
-@app.route('/search', methods=['POST'])
-def search_versions():
-    query = request.form['search_query']
-    results = query_similar_versions(query)
-    return render_template('search_results.html', results=results)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
