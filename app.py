@@ -6,7 +6,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 import io
-import os  # ✅ required for reading PORT from environment
+import os
 
 app = Flask(__name__)
 
@@ -20,19 +20,17 @@ def index():
         result = {"spun": spun, "reviewed": reviewed}
     return render_template('index.html', result=result)
 
-@app.route('/download')
+@app.route('/download', methods=['GET', 'POST'])
 def download_pdf():
-    content = request.args.get('content', '')
-    output_type = request.args.get('type', 'output')
-
-    # 🔍 Debug statements
-    print("📥 PDF download route hit")
-    print(f"Requested type: {output_type}")
-    print(f"Content length: {len(content)}")
+    if request.method == 'POST':
+        content = request.form.get('content', '')
+        output_type = request.form.get('type', 'output')
+    else:
+        content = request.args.get('content', '')
+        output_type = request.args.get('type', 'output')
 
     if not content.strip():
-        print("⚠️ No content provided!")
-        return "No content to generate PDF.", 400
+        return "⚠️ No content provided to download.", 400
 
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(
@@ -50,12 +48,11 @@ def download_pdf():
         fontName='Helvetica',
         fontSize=11,
         leading=16,
-        wordWrap='CJK',
+        wordWrap='CJK',  # Ensures word wrapping
         alignment=0
     )
 
     flowables = []
-
     for para in content.strip().split('\n'):
         if para.strip():
             paragraph = Paragraph(para.strip().replace('\n', '<br/>'), wrapped_style)
