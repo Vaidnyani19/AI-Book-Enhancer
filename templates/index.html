@@ -17,21 +17,15 @@
                 <button type="submit">✨ Enhance Chapter</button>
             </form>
 
+            <form method="POST" action="/search" class="search-form">
+                <input type="text" name="search_query" placeholder="🔎 Search previous versions..." required />
+                <button type="submit">Search</button>
+            </form>
+
             {% if result %}
                 <div class="btn-row">
-                    <!-- ✅ POST form for reviewed PDF -->
-                    <form method="POST" action="{{ url_for('download_pdf') }}" target="_blank" style="display: inline;">
-                        <input type="hidden" name="type" value="reviewed">
-                        <input type="hidden" name="content" value="{{ result.reviewed }}">
-                        <button class="download-btn" type="submit">📅 Download Review PDF</button>
-                    </form>
-
-                    <!-- ✅ POST form for enhanced PDF -->
-                    <form method="POST" action="{{ url_for('download_pdf') }}" target="_blank" style="display: inline;">
-                        <input type="hidden" name="type" value="enhanced">
-                        <input type="hidden" name="content" value="{{ result.spun }}">
-                        <button class="download-btn" type="submit">🎨 Download Enhanced PDF</button>
-                    </form>
+                    <a class="download-btn" href="{{ url_for('download_pdf') }}?type=reviewed&content={{ result.reviewed | urlencode }}">📅 Download Review PDF</a>
+                    <a class="download-btn" href="{{ url_for('download_pdf') }}?type=enhanced&content={{ result.spun | urlencode }}">🎨 Download Enhanced PDF</a>
                 </div>
 
                 <div class="result-block">
