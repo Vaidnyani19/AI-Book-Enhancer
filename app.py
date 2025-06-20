@@ -20,10 +20,10 @@ def index():
         result = {"spun": spun, "reviewed": reviewed}
     return render_template('index.html', result=result)
 
-@app.route('/download', methods=['POST'])
+@app.route('/download')
 def download_pdf():
-    content = request.form.get('content', '')
-    output_type = request.form.get('type', 'output')
+    content = request.args.get('content', '')
+    output_type = request.args.get('type', 'output')
 
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(
