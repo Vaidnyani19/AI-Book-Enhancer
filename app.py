@@ -18,17 +18,19 @@ def index():
         spun = spin_chapter(raw_text)
         reviewed = review_chapter(spun)
         result = {"spun": spun, "reviewed": reviewed}
-
-        # Save to ChromaDB
-        save_version_to_chroma(spun, label="enhanced")
-        save_version_to_chroma(reviewed, label="reviewed")
-
     return render_template('index.html', result=result)
 
-@app.route('/download')
+@app.route('/download', methods=['GET', 'POST'])
 def download_pdf():
-    content = request.args.get('content', '')
-    output_type = request.args.get('type', 'output')
+    if request.method == 'POST':
+        content = request.form.get('content', '')
+        output_type = request.form.get('type', 'output')
+    else:
+        content = request.args.get('content', '')
+        output_type = request.args.get('type', 'output')
+
+    if not content.strip():
+        return "⚠️ No content provided to download.", 400
 
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(
@@ -46,12 +48,11 @@ def download_pdf():
         fontName='Helvetica',
         fontSize=11,
         leading=16,
-        wordWrap='CJK',
+        wordWrap='CJK',  # Ensures word wrapping
         alignment=0
     )
 
     flowables = []
-
     for para in content.strip().split('\n'):
         if para.strip():
             paragraph = Paragraph(para.strip().replace('\n', '<br/>'), wrapped_style)
