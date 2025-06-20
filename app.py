@@ -20,17 +20,10 @@ def index():
         result = {"spun": spun, "reviewed": reviewed}
     return render_template('index.html', result=result)
 
-@app.route('/download', methods=['GET', 'POST'])
+@app.route('/download')
 def download_pdf():
-    if request.method == 'POST':
-        content = request.form.get('content', '')
-        output_type = request.form.get('type', 'output')
-    else:
-        content = request.args.get('content', '')
-        output_type = request.args.get('type', 'output')
-
-    if not content.strip():
-        return "⚠️ No content provided to download.", 400
+    content = request.args.get('content', '')
+    output_type = request.args.get('type', 'output')
 
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(
@@ -48,11 +41,12 @@ def download_pdf():
         fontName='Helvetica',
         fontSize=11,
         leading=16,
-        wordWrap='CJK',  # Ensures word wrapping
+        wordWrap='CJK',
         alignment=0
     )
 
     flowables = []
+
     for para in content.strip().split('\n'):
         if para.strip():
             paragraph = Paragraph(para.strip().replace('\n', '<br/>'), wrapped_style)
