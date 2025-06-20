@@ -19,17 +19,15 @@
 
             {% if result %}
                 <div class="btn-row">
+                    <!-- Review PDF (POST form to avoid Request URI too long) -->
                     <form method="POST" action="{{ url_for('download_pdf') }}">
                         <input type="hidden" name="type" value="reviewed">
                         <input type="hidden" name="content" value="{{ result.reviewed }}">
                         <button type="submit" class="download-btn">🗕️ Download Review PDF</button>
                     </form>
 
-                    <form method="POST" action="{{ url_for('download_pdf') }}">
-                        <input type="hidden" name="type" value="enhanced">
-                        <input type="hidden" name="content" value="{{ result.spun }}">
-                        <button type="submit" class="download-btn">🎨 Download Enhanced PDF</button>
-                    </form>
+                    <!-- Enhanced PDF (GET, no issue) -->
+                    <a class="download-btn" href="{{ url_for('download_pdf') }}?type=enhanced&content={{ result.spun | urlencode }}">🎨 Download Enhanced PDF</a>
                 </div>
 
                 <div class="result-block">
